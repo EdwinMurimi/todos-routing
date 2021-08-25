@@ -1,4 +1,5 @@
 const express  = require('express');
+const { reset } = require('nodemon');
 const app = express();
 app.use(express.json())
 
@@ -69,6 +70,37 @@ app.get('/:id', function (req, res) {
     })
     return res.send(todo);
 })
+
+// PUT, DELETE requests will be done below this
+
+// DELETE request
+app.delete('/:id', (req, res) => {
+    const { id } = req.params;
+   
+    const todo_to_delete = todos.items.findIndex(todo => todo.id == id);
+    todos.items.splice(todo_to_delete, 1);
+    return res.send(todos);
+
+});
+
+// PUT request
+app.put('/:id', (req, res) => {
+    const { id } = req.params;
+
+    if(id) {
+
+        const todo_to_update = todos.items.find(todo => todo.id == id)
+
+        // here i am updating the is_complete property to true.
+        todo_to_update.is_complete = true;
+        return res.send(todos);
+
+    }
+
+    return res.send('todo not found!!!');
+})
+
+// PUT, DELETE requests will be done above this
 
 app.post('/', function (req, res){
     const todo = req.body;
